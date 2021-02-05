@@ -9,25 +9,25 @@ mapPoint :: Point -> (Double, Double, Double)
 mapPoint (Point2d x y) = (x, y, 0)
 mapPoint (Point3d x y z) = (x, y, z)
 
-skipWhile :: (a -> Bool) -> [a] -> [a]
-skipWhile _ [] = []
-skipWhile predicate (x : xs) =
-  if predicate x
-    then skipWhile predicate xs
-    else x : xs
+-- skipWhile :: (a -> Bool) -> [a] -> [a]
+-- skipWhile _ [] = []
+-- skipWhile predicate (x : xs) =
+--   if predicate x
+--     then skipWhile predicate xs
+--     else x : xs
 
--- todo optimize with recursive call (is better than comprehension)
--- skip number list = [snd x | x <- zip [0 ..] list, fst x >= number]
-skip :: (Num a1, Enum a1, Ord a1) => a1 -> [a2] -> [a2]
-skip _ [] = []
-skip number list =
-  let skipCount number list@((index, obj) : xs) =
-        if index < number
-          then skipCount number xs
-          else list
-   in map snd (skipCount number (zip [0 ..] list))
+-- -- todo optimize with recursive call (is better than comprehension)
+-- -- skip number list = [snd x | x <- zip [0 ..] list, fst x >= number]
+-- skip :: (Num a1, Enum a1, Ord a1) => a1 -> [a2] -> [a2]
+-- skip _ [] = []
+-- skip number list =
+--   let skipCount number list@((index, obj) : xs) =
+--         if index < number
+--           then skipCount number xs
+--           else list
+--    in map snd (skipCount number (zip [0 ..] list))
 
-removeLast = reverse . skip 1 . reverse
+removeLast = reverse . drop 1 . reverse
 
 squareDistance :: Point -> Point -> Double
 squareDistance left right =
@@ -68,7 +68,7 @@ simplifyRadialDistance :: [Point] -> Double -> [Point]
 simplifyRadialDistance [] _ = []
 simplifyRadialDistance [point] _ = [point]
 simplifyRadialDistance (point : points) tolerance =
-  point : simplifyRadialDistance (skipWhile (\p -> squareDistance p point < tolerance) points) tolerance
+  point : simplifyRadialDistance (dropWhile (\p -> squareDistance p point < tolerance) points) tolerance
 
 simplifyDouglasPeuker :: [Point] -> Double -> [Point]
 simplifyDouglasPeuker [] _ = []
@@ -80,7 +80,7 @@ simplifyDouglasPeuker points tolerance =
       distances = zipWith (\i p -> (if p == first || p == last then (i, -1) else (i, segmentSquareDistance p first last))) [0 ..] points
       (index, distance) = foldr1 (\left@(_, distanceLeft) right@(_, distanceRight) -> if distanceLeft >= distanceRight then left else right) distances
    in if distance > tolerance
-        then removeLast (simplifyDouglasPeuker (take (index + 1) points) tolerance) ++ simplifyDouglasPeuker (skip index points) tolerance
+        then removeLast (simplifyDouglasPeuker (take (index + 1) points) tolerance) ++ simplifyDouglasPeuker (drop index points) tolerance
         else [first, last]
 
 simplify :: [Point] -> Double -> Bool -> [Point]

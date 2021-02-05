@@ -15,19 +15,19 @@ main = hspec $ do
       it "should map a 3d point to three coordinates" $
         mapPoint (Point3d 1.3 3.7 42) `shouldBe` (1.3, 3.7, 42)
 
-    describe "skip" $ do
-      it "should remove the first element of a list" $
-        skip 1 [1, 2, 3, 4] `shouldBe` [2, 3, 4]
+    -- describe "skip" $ do
+    --   it "should remove the first element of a list" $
+    --     skip 1 [1, 2, 3, 4] `shouldBe` [2, 3, 4]
 
-      it "should remove the multiple elements of a list" $
-        skip 3 [1, 2, 3, 4] `shouldBe` [4]
+    --   it "should remove the multiple elements of a list" $
+    --     skip 3 [1, 2, 3, 4] `shouldBe` [4]
 
-    describe "skipWhile" $ do
-      it "should remove elements of a list until the predicate returns false" $
-        skipWhile (< 3) [1, 2, 3, 4, 5] `shouldBe` [3, 4, 5]
+    -- describe "skipWhile" $ do
+    --   it "should remove elements of a list until the predicate returns false" $
+    --     skipWhile (< 3) [1, 2, 3, 4, 5] `shouldBe` [3, 4, 5]
 
-      it "should remove elements of a list until the predicate returns false" $
-        skipWhile (== "a") ["a", "a", "b", "c"] `shouldBe` ["b", "c"]
+    --   it "should remove elements of a list until the predicate returns false" $
+    --     skipWhile (== "a") ["a", "a", "b", "c"] `shouldBe` ["b", "c"]
 
     describe "removeLast" $ do
       it "should remove the last element of a list" $
