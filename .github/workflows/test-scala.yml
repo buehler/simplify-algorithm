@@ -1,4 +1,4 @@
-name: Test Go Algorithm
+name: Test Scala Algorithm
 
 on:
   push:
@@ -14,10 +14,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - uses: actions/setup-go@v2
+      - uses: olafurpg/setup-scala@v10
         with:
-          go-version: 1.16.x
+          java-version: adopt@1.8
 
       - name: Test
-        run: go test ./... -v
-        working-directory: go
+        run: sbt -v -Dfile.encoding=UTF-8 +test
+        working-directory: scala
