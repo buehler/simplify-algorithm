@@ -1,0 +1,36 @@
+name: Test Haskell Algorithm
+
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+    branches:
+      - '**'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: haskell/actions/setup@v1
+        with:
+          cabal-version: 2.4
+          ghc-version: 8.6.5
+
+      - name: Update Dependencies
+        run: cabal v2-update --enable-tests
+        working-directory: haskell
+
+      - name: Install Dependencies
+        run: cabal v2-install
+        working-directory: haskell
+
+      - name: Build
+        run: cabal v2-build --enable-tests
+        working-directory: haskell
+
+      - name: Test
+        run: cabal v2-test --enable-tests
+        working-directory: haskell
