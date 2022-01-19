@@ -1,0 +1,20 @@
+name: Test Rust Algorithm
+
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+    branches:
+      - '**'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Test
+        uses: marcopolo/cargo@master
+        with:
+          command: test
+          working-directory: rust
