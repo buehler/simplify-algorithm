@@ -60,23 +60,33 @@ public class Simplify {
         var first = points.getFirst();
         var last = points.getLast();
 
-        var map = new TreeMap<Double, Integer>();
-        var idx = 0;
-        for (var point : points) {
-            var distance = point == first || point == last
-                    ? -1
-                    : segmentSquareDistance(point, first, last);
-            map.put(distance, idx++);
+        var foundIndex = -1;
+        var bestDistance = 0.0;
+
+        for (int i = 0; i < points.size(); i++) {
+            var point = points.get(i);
+
+            if (point == first || point == last) {
+                continue;
+            }
+
+            var distance = segmentSquareDistance(point, first, last);
+            if (distance >= bestDistance) {
+                bestDistance = distance;
+                foundIndex = i;
+            }
         }
 
-        var lastEntry = map.lastEntry();
-        var lastDistance = lastEntry.getKey();
-        var lastIdx = lastEntry.getValue();
+        if (bestDistance > tolerance) {
+            List<Point> firstHalf = new ArrayList<>(points.subList(0, foundIndex + 1));
+            List<Point> secondHalf = new ArrayList<>(points.subList(foundIndex, points.size()));
 
-        if (lastDistance > tolerance) {
-            var firstHalf = simplifyDouglasPeucker(points.subList(0, lastIdx), tolerance);
-            firstHalf.removeLast();
-            var secondHalf = simplifyDouglasPeucker(points.subList(lastIdx, points.size()), tolerance);
+            firstHalf = simplifyDouglasPeucker(firstHalf, tolerance);
+            if (!firstHalf.isEmpty()) {
+                firstHalf.removeLast();
+            }
+
+            secondHalf = simplifyDouglasPeucker(secondHalf, tolerance);
 
             firstHalf.addAll(secondHalf);
             return firstHalf;

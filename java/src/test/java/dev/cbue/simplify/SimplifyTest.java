@@ -57,7 +57,8 @@ public class SimplifyTest {
     @MethodSource("dev.cbue.simplify.testData.TestData#radialSimplifications")
     public void simplifyRadialDistance(Simplification testCase) {
         var points = TestData.points();
-        var result = Simplify.simplifyRadialDistance(List.of(points), testCase.tolerance()).toArray();
+        var tolerance = testCase.tolerance() * testCase.tolerance();
+        var result = Simplify.simplifyRadialDistance(List.of(points), tolerance).toArray();
         assertArrayEquals(testCase.result(), result);
     }
 
@@ -65,7 +66,8 @@ public class SimplifyTest {
     @MethodSource("dev.cbue.simplify.testData.TestData#douglasPeuckerSimplifications")
     public void simplifyDouglasPeucker(Simplification testCase) {
         var points = TestData.points();
-        var result = Simplify.simplifyDouglasPeucker(List.of(points), testCase.tolerance()).toArray();
+        var tolerance = testCase.tolerance() * testCase.tolerance();
+        var result = Simplify.simplifyDouglasPeucker(List.of(points), tolerance).toArray();
         assertArrayEquals(testCase.result(), result);
     }
 
@@ -73,7 +75,8 @@ public class SimplifyTest {
     @MethodSource("dev.cbue.simplify.testData.TestData#algorithmicSimplifications")
     public void simplify(AlgorithmicSimplification testCase) {
         var points = TestData.points();
-        var result = Simplify.simplify(List.of(points), testCase.tolerance(), testCase.highQuality()).toArray();
+        var tolerance = testCase.tolerance() * testCase.tolerance();
+        var result = Simplify.simplify(List.of(points), tolerance, testCase.highQuality()).toArray();
         assertArrayEquals(testCase.result(), result);
     }
 }
