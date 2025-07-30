@@ -1,22 +1,24 @@
 #include <simplify_algorithm.hpp>
-#include <iostream>
+#include <algorithms.hpp>
 
 namespace simplify
 {
-
-  void simplify()
+  std::vector<IPoint *> simplify(const std::vector<IPoint *> &points, const double tolerance, const bool highQuality)
   {
-    std::cout << "Simplify algorithm called." << std::endl;
-    // Implementation of the simplify function goes here.
-    // This is a placeholder for the actual logic that would be used to simplify something.
+    if (points.size() <= 2)
+    {
+      return points;
+    }
+
+    auto squaredTolerance = tolerance * tolerance;
+
+    if (highQuality)
+    {
+      return algorithms::simplifyDouglasPeucker(points, squaredTolerance);
+    }
+
+    return algorithms::simplifyDouglasPeucker(
+        algorithms::simplifyRadialDistance(points, squaredTolerance),
+        squaredTolerance);
   }
-
-  // Simplify_algorithm::Simplify_algorithm() {
-  //     number = 6;
-  // }
-
-  // int Simplify_algorithm::get_number() const {
-  //   return number;
-  // }
-
 }

@@ -1,4 +1,4 @@
-simplify_sources = ['simplify_algorithm.cpp']
+simplify_sources = ['simplify_algorithm.cpp', 'points.cpp', 'algorithms.hpp', 'algorithms.cpp']
 
 lib = shared_library(
     'simplify',

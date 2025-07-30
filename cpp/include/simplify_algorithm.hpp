@@ -13,21 +13,10 @@
 #endif
 #endif
 
+#include <vector>
+#include <points.hpp>
+
 namespace simplify
 {
-
-  void SIMPLIFY_ALGORITHM_PUBLIC simplify();
-
-  // class SIMPLIFY_ALGORITHM_PUBLIC Simplify_algorithm {
-
-  // public:
-  //   Simplify_algorithm();
-  //   int get_number() const;
-
-  // private:
-
-  //   int number;
-
-  // };
-
+  std::vector<IPoint *> SIMPLIFY_ALGORITHM_PUBLIC simplify(const std::vector<IPoint *> &points, const double tolerance, const bool highQuality = false);
 }

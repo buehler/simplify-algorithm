@@ -1,1 +1,1 @@
-install_headers('simplify_algorithm.hpp')
+install_headers('simplify_algorithm.hpp', 'points.hpp')
