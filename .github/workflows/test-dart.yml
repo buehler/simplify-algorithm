@@ -3,10 +3,14 @@ name: Test Dart Algorithm
 on:
   push:
     branches:
-      - '**'
+      - master
+    paths:
+      - 'dart/**'
   pull_request:
     branches:
-      - '**'
+      - master
+    paths:
+      - 'dart/**'
 
 jobs:
   test:
