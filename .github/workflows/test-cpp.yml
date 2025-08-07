@@ -20,7 +20,9 @@ jobs:
         run: python -m pip install meson ninja
       - name: Configure Project
         run: meson setup builddir/
+        working-directory: cpp
         env:
           CC: gcc
       - name: Run Tests
         run: meson test -C builddir/ -v
+        working-directory: cpp
