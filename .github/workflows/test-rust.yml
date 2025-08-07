@@ -3,22 +3,16 @@ name: Test Rust Algorithm
 on:
   push:
     branches:
-      - master
+      - main
     paths:
       - 'rust/**'
-  pull_request:
-    branches:
-      - master
-    paths:
-      - 'rust/**'
+      - '.github/workflows/test-rust.yml'
 
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Test
-        uses: marcopolo/cargo@master
-        with:
-          command: test
-          working-directory: rust
+        run: cargo test
+        working-directory: rust

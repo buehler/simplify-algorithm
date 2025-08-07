@@ -3,22 +3,18 @@ name: Test Scala Algorithm
 on:
   push:
     branches:
-      - master
+      - main
     paths:
       - 'scala/**'
-  pull_request:
-    branches:
-      - master
-    paths:
-      - 'scala/**'
+      - '.github/workflows/test-scala.yml'
 
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
-      - uses: olafurpg/setup-scala@v10
+      - uses: olafurpg/setup-scala@v11
         with:
           java-version: adopt@1.8
 

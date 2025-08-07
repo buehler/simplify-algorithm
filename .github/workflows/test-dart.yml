@@ -3,20 +3,16 @@ name: Test Dart Algorithm
 on:
   push:
     branches:
-      - master
+      - main
     paths:
       - 'dart/**'
-  pull_request:
-    branches:
-      - master
-    paths:
-      - 'dart/**'
+      - '.github/workflows/test-dart.yml'
 
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - uses: dart-lang/setup-dart@v1
 

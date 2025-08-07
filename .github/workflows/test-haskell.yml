@@ -3,25 +3,18 @@ name: Test Haskell Algorithm
 on:
   push:
     branches:
-      - master
+      - main
     paths:
       - 'haskell/**'
-  pull_request:
-    branches:
-      - master
-    paths:
-      - 'haskell/**'
+      - '.github/workflows/test-haskell.yml'
 
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
-      - uses: haskell/actions/setup@v1
-        with:
-          cabal-version: 2.4
-          ghc-version: 8.6.5
+      - uses: haskell/actions/setup@v2
 
       - name: Update Dependencies
         run: cabal v2-update --enable-tests

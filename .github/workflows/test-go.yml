@@ -3,24 +3,18 @@ name: Test Go Algorithm
 on:
   push:
     branches:
-      - master
+      - main
     paths:
       - 'go/**'
-  pull_request:
-    branches:
-      - master
-    paths:
-      - 'go/**'
+      - '.github/workflows/test-go.yml'
 
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
-      - uses: actions/setup-go@v2
-        with:
-          go-version: 1.16.x
+      - uses: actions/setup-go@v5
 
       - name: Test
         run: go test ./... -v
