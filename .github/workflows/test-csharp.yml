@@ -3,10 +3,9 @@ name: Test C# Algorithm
 on:
   push:
     branches:
-      - '**'
-  pull_request:
-    branches:
-      - '**'
+      - master
+    paths:
+      - 'csharp/**'
 
 jobs:
   test:

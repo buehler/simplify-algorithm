@@ -3,10 +3,14 @@ name: Test F# Algorithm
 on:
   push:
     branches:
-      - '**'
+      - master
+    paths:
+      - 'fsharp/**'
   pull_request:
     branches:
-      - '**'
+      - master
+    paths:
+      - 'fsharp/**'
 
 jobs:
   test:
