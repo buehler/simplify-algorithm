@@ -77,6 +77,86 @@ std::vector<SegmentDistanceTestCase> getSegmentDistances()
     return parsed;
 }
 
+struct RadialSimplificationTestCase
+{
+    double tolerance;
+    std::vector<simplify::IPoint *> result;
+};
+
+void from_json(const json &j, RadialSimplificationTestCase &testCase)
+{
+    testCase.tolerance = j["tolerance"];
+    for (const auto &point : j["result"])
+    {
+        testCase.result.push_back(simplify::IPoint::create(point["x"], point["y"]));
+    }
+}
+
+std::vector<RadialSimplificationTestCase> getRadialSimplificationCases()
+{
+    std::ifstream f("radial-simplifications.json");
+    if (!f.is_open())
+    {
+        throw std::runtime_error("Could not open radial-simplification.json");
+    }
+    auto data = json::parse(f);
+    return data.get<std::vector<RadialSimplificationTestCase>>();
+}
+
+struct DouglasPeuckerTestCase
+{
+    double tolerance;
+    std::vector<simplify::IPoint *> result;
+};
+
+void from_json(const json &j, DouglasPeuckerTestCase &testCase)
+{
+    testCase.tolerance = j["tolerance"];
+    for (const auto &point : j["result"])
+    {
+        testCase.result.push_back(simplify::IPoint::create(point["x"], point["y"]));
+    }
+}
+
+std::vector<DouglasPeuckerTestCase> getDouglasPeuckerCases()
+{
+    std::ifstream f("douglas-peucker-simplifications.json");
+    if (!f.is_open())
+    {
+        throw std::runtime_error("Could not open douglas-peucker-simplifications.json");
+    }
+    auto data = json::parse(f);
+    return data.get<std::vector<DouglasPeuckerTestCase>>();
+}
+
+struct AlgorithmTestCase
+{
+    bool highQuality;
+    double tolerance;
+    std::vector<simplify::IPoint *> result;
+};
+
+void from_json(const json &j, AlgorithmTestCase &testCase)
+{
+    testCase.highQuality = j["highQuality"];
+    testCase.tolerance = j["tolerance"];
+    for (const auto &point : j["result"])
+    {
+        testCase.result.push_back(simplify::IPoint::create(point["x"], point["y"]));
+    }
+}
+
+std::vector<AlgorithmTestCase> getAlgorithmCases()
+{
+    std::ifstream f("algorithm-simplifications.json");
+    if (!f.is_open())
+    {
+        throw std::runtime_error("Could not open algorithm-simplifications.json");
+    }
+    auto data = json::parse(f);
+    return data.get<std::vector<AlgorithmTestCase>>();
+}
+
 SCENARIO("Simple Points can be created")
 {
     GIVEN("A 2D point")
@@ -177,6 +257,118 @@ SCENARIO("Segment distance calculation")
                     REQUIRE_THAT(
                         distance,
                         Catch::Matchers::WithinAbs(expectedDistance, 1e-6));
+                }
+            }
+        }
+    }
+}
+
+SCENARIO("Radial simplification algorithm")
+{
+    GIVEN("A list of radial simplification test cases")
+    {
+        auto cases = getRadialSimplificationCases();
+
+        THEN("The list should contain 4 radial simplification test cases")
+        {
+            REQUIRE(cases.size() == 4);
+        }
+
+        WHEN("Applying the radial simplification algorithm")
+        {
+            for (const auto &testCase : cases)
+            {
+                auto tolerance = testCase.tolerance * testCase.tolerance;
+                auto expectedResult = testCase.result;
+                auto points = getPoints();
+
+                THEN("The radial simplification should produce the expected result")
+                {
+                    auto simplified = simplify::algorithms::simplifyRadialDistance(points, tolerance);
+                    REQUIRE(simplified.size() == expectedResult.size());
+
+                    for (size_t i = 0; i < simplified.size(); ++i)
+                    {
+                        auto expectedPoint = expectedResult[i];
+                        auto simplifiedPoint = simplified[i];
+
+                        REQUIRE(*expectedPoint == *simplifiedPoint);
+                    }
+                }
+            }
+        }
+    }
+}
+
+SCENARIO("Douglas Peucker simplification algorithm")
+{
+    GIVEN("A list of douglas peucker simplification test cases")
+    {
+        auto cases = getDouglasPeuckerCases();
+
+        THEN("The list should contain 4 douglas peucker simplification test cases")
+        {
+            REQUIRE(cases.size() == 4);
+        }
+
+        WHEN("Applying the douglas peucker simplification algorithm")
+        {
+            for (const auto &testCase : cases)
+            {
+                auto tolerance = testCase.tolerance * testCase.tolerance;
+                auto expectedResult = testCase.result;
+                auto points = getPoints();
+
+                THEN("The douglas peucker simplification should produce the expected result")
+                {
+                    auto simplified = simplify::algorithms::simplifyDouglasPeucker(points, tolerance);
+                    REQUIRE(simplified.size() == expectedResult.size());
+
+                    for (size_t i = 0; i < simplified.size(); ++i)
+                    {
+                        auto expectedPoint = expectedResult[i];
+                        auto simplifiedPoint = simplified[i];
+
+                        REQUIRE(*expectedPoint == *simplifiedPoint);
+                    }
+                }
+            }
+        }
+    }
+}
+
+SCENARIO("Algorithm simplification algorithm")
+{
+    GIVEN("A list of algorithm simplification test cases")
+    {
+        auto cases = getAlgorithmCases();
+
+        THEN("The list should contain 8 algorithm simplification test cases")
+        {
+            REQUIRE(cases.size() == 8);
+        }
+
+        WHEN("Applying the algorithm simplification algorithm")
+        {
+            for (const auto &testCase : cases)
+            {
+                auto tolerance = testCase.tolerance;
+                auto highQuality = testCase.highQuality;
+                auto expectedResult = testCase.result;
+                auto points = getPoints();
+
+                THEN("The algorithm simplification should produce the expected result")
+                {
+                    auto simplified = simplify::simplify(points, tolerance, highQuality);
+                    REQUIRE(simplified.size() == expectedResult.size());
+
+                    for (size_t i = 0; i < simplified.size(); ++i)
+                    {
+                        auto expectedPoint = expectedResult[i];
+                        auto simplifiedPoint = simplified[i];
+
+                        REQUIRE(*expectedPoint == *simplifiedPoint);
+                    }
                 }
             }
         }

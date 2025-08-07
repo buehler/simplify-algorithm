@@ -22,6 +22,11 @@ namespace simplify
         double z;
 
         Coordinates(double x, double y, double z) : x(x), y(y), z(z) {}
+
+        bool operator==(const Coordinates &other) const
+        {
+            return x == other.x && y == other.y && z == other.z;
+        }
     };
 
     class SIMPLIFY_ALGORITHM_PUBLIC IPoint
@@ -33,6 +38,11 @@ namespace simplify
         virtual double getX() const = 0;
         virtual double getY() const = 0;
         virtual double getZ() const = 0;
+
+        bool operator==(const IPoint &other) const
+        {
+            return getX() == other.getX() && getY() == other.getY() && getZ() == other.getZ();
+        }
 
         Coordinates operator-(const IPoint &other) const
         {
